@@ -1,0 +1,109 @@
+#!/usr/bin/bash
+
+_internal="eDP1"
+_externalRight="DP3"
+_externalLeft="DP1"
+
+
+work_monitor_on_top() {
+  if [[ $(xrandr -q | grep "^$_externalLeft connected") ]];
+  then
+    xrandr \
+      --output eDP1 --mode 1920x1080 --pos 320x1440 --rotate normal \
+      --output DP1 --primary --mode 2560x1440 --pos 0x0 --rotate normal \
+      --output DP2 --off \
+      --output DP3 --off \
+      --output HDMI-1 --off \
+      --output HDMI-2 --off \
+      --output HDMI-3 --off
+  fi
+}
+
+home_monitor_on_the_right() {
+  if [[ $(xrandr -q | grep "^$_externalRight connected") ]];
+  then
+    xrandr \
+      --output eDP1 --mode 1920x1080 --pos 0x0 --rotate normal \
+      --output DP3 --primary --mode 1920x1080 --rate 60 --pos 1920x0 --rotate normal \
+      --output DP1 --off \
+      --output DP2 --off \
+      --output HDMI-1 --off \
+      --output HDMI-2 --off \
+      --output HDMI-3 --off
+  fi
+}
+
+home_monitor_on_top() {
+  if [[ $(xrandr -q | grep "^$_externalRight connected") ]];
+  then
+    xrandr \
+      --output eDP1 --mode 1920x1080 --pos 0x1080 --rotate normal \
+      --output DP3 --primary --mode 1920x1080 --rate 75 --pos 0x0 --rotate normal \
+      --output DP1 --off \
+      --output DP2 --off \
+      --output HDMI1 --off \
+      --output HDMI2 --off \
+      --output HDMI3 --off
+  fi
+}
+
+home_monitor() {
+  xrandr \
+    --output DP3 --primary --mode 1920x1080 --pos 1920x0 --rotate normal \
+    --output eDP1 --off \
+    --output DP1 --off \
+    --output DP2 --off \
+    --output HDMI1 --off \
+    --output HDMI2 --off \
+    --output HDMI3 --off
+}
+
+laptop() {
+  xrandr \
+    --output eDP1 --primary --mode 1920x1080 --pos 0x0 --rotate normal \
+    --output DP3 --off \
+    --output DP1 --off \
+    --output DP2 --off \
+    --output HDMI-1 --off \
+    --output HDMI-2 --off \
+    --output HDMI-3 --off
+}
+
+
+main() {
+  if [ -z "$1" ]; then
+    choices="printf 'laptop\n[home] monitor\n[home] monitor on top\n[home] monitor on the right\n[work] monitor on top'"
+    selection="rofi -dmenu -i -p 'Disposition:' -l 5 -theme $HOME/.config/dwm/resources/rofi/config.rasi"
+
+    chosen=$(eval "$choices | $selection")
+  else
+    chosen=$1
+  fi
+
+  case "$chosen" in
+    "laptop")
+      laptop
+      ;;
+
+    "[home] monitor")
+      home_monitor
+      ;;
+
+    "[home] monitor on top")
+      home_monitor_on_top
+      ;;
+
+    "[home] monitor on the right")
+      home_monitor_on_the_right
+      ;;
+
+    "[work] monitor on top")
+      work_monitor_on_top
+      ;;
+
+    *)
+      exit 1
+      ;;
+  esac
+}
+main $1

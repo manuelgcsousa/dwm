@@ -1,0 +1,24 @@
+#!/bin/sh
+
+_output="$HOME/Pictures/Screenshots/%Y-%m-%d-%T.png"
+
+_choices="printf 'Selection\nScreen'"
+_selection="rofi -dmenu -i -p 'Screenshot:' -l 2 -theme $HOME/.config/dwm/resources/rofi/config.rasi"
+
+choice=$(eval "$_choices | $_selection")
+
+case "$choice" in
+  "Selection")
+    scrot "$_output" --select --line mode=edge -e 'xclip -selection clipboard -target image/png -i $f' || exit
+    ;;
+
+  "Screen")
+    scrot "$_output" --focused --border -e 'xclip -selection clipboard -target image/png -i $f' || exit
+    ;;
+
+  *)
+    exit
+    ;;
+esac
+
+notify-send "Screenshot taken."

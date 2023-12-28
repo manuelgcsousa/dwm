@@ -1,0 +1,28 @@
+#!/bin/sh
+
+_choices="printf '  Power Off\n  Reboot\n  Lock\n  Logout'"
+_selection="rofi -dmenu -i -p 'Run:' -l 4 -theme $HOME/.config/dwm/resources/rofi/config.rasi"
+
+choice=$(eval "$_choices | $_selection")
+
+case "$choice" in
+  "  Power Off")
+    poweroff
+    ;;
+
+  "  Reboot")
+    reboot
+    ;;
+
+  "  Lock")
+    i3lock -c 1C1C1C
+    ;;
+
+  "  Logout")
+    killall dwm
+    ;;
+
+  *)
+    exit 1
+    ;;
+esac
