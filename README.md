@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./src/dwm.png">
+  <img src="https://dwm.suckless.org/dwm.svg" width="180px">
   <h2>Custom dwm build</h2>
   Personal work setup which became pretty stable.
 </div>
